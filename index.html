@@ -1,0 +1,865 @@
+<!DOCTYPE html><html lang="pt-br"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- Meta Pixel Code --><script async="" src="js/fbevents.js"></script><script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '661133322372911');
+fbq('track', 'PageView');
+</script><noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=661133322372911&ev=PageView&noscript=1"
+/></noscript><!-- End Meta Pixel Code -->
+
+
+
+<!-- Google tag (gtag.js) -->
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=AW-16650695606">
+</script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'AW-16650695606');
+</script>
+
+    <title>Quiz Interativo</title>
+    <style>
+
+.rating {
+  cursor: pointer;
+
+  
+  text-align: left; /* Alinha os ícones à esquerda */
+  display: flex; /* Garante que as estrelas fiquem na mesma linha */
+  justify-content: center; /* Centraliza as estrelas */
+  flex-wrap: nowrap; /* Evita que as estrelas sejam envolvidas em várias linhas */
+}
+
+.rating span {
+  font-size: 50px; /* Tamanho padrão para telas maiores */
+  color: gray;
+  margin: 0 15px; /* Espaçamento padrão para telas maiores */
+  user-select: none;
+}
+
+
+
+
+
+.card {
+    width: 100%;
+    height: fit-content;
+    padding: 20px;
+    border: 1px solid #d3d3d3;
+    background-color: #f1f1f1;
+    border-radius: 15px;
+}
+
+.satisfacao{
+    text-align: center;
+    font-size: 16px;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+}
+.resposta__gradeContainer {
+    display: grid;
+    grid-template-rows: 1fr;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 10px;
+    margin: 10px 0px 20px 0px;
+}
+
+.resposta__grade.selecionado {
+    background-color:rgb(53 113 203);
+    color: white;
+}
+
+.resposta__grade {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 15px;
+    background-color: #d3d3d3;
+    border-radius: 5px;
+    transition: all ease 0.3s;
+    border: none;
+}
+.resposta__grade p {
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.5;
+    text-align: center;
+}
+
+
+
+
+.card__enviarResposta {
+    width: 100%;
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    padding: 10px 20px;
+
+    border-radius: 5px;
+    outline: none;
+    border: none;
+    transition: all ease 0.3s;
+}
+
+.card__gradeDescricao {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    margin: 5px 0px 0px 0px;
+    color: #7e7e7e;
+}
+
+.cards {
+    width: auto; /* Ajuste para 'auto' ou uma largura fixa conforme necessário */
+    max-width: 600px; /* Uma largura máxima para garantir a responsividade */
+    padding: 20px;
+    border: 1px solid #d3d3d3;
+    background-color: #f1f1f1;
+    border-radius: 15px;
+    margin: 20px; /* Garante um pouco de espaço ao redor do card */
+}
+
+
+ .mensagem {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .mensagem-sucesso {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .mensagem-erro {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        /* Estilos para o pop-up */
+.popup {
+    display: none; /* Inicia oculto */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Sobreposição escura */
+    z-index: 999; /* Z-index alto para ficar acima do conteúdo */
+}
+
+.popup-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    width: 400px;
+}
+
+#closePopup {
+    width: 100%;
+    padding: 10px 20px;
+    font-size: 18px;
+    font-weight: 600;
+    color: #ffffff;
+    background-color:rgb(42 117 195);
+    border: none;
+    border-radius: 5px;
+}
+
+/* Estilo para o botão desabilitado */
+.card__enviarResposta:disabled {
+  background-color: #cccccc; /* Cor de fundo para o estado desabilitado */
+  color: #666666; /* Cor do texto para o estado desabilitado */
+}
+
+/* Estilo para o botão habilitado */
+.card__enviarResposta:not(:disabled) {
+    background-color: rgb(28 195 72);
+  color: white; /* Cor do texto para o estado habilitado */
+}
+
+.card__resgatar{
+    width: 100%;
+    padding: 10px 20px;
+    font-size: 18px;
+    font-weight: 600;
+    color: #ffffff;
+    background-color: rgb(255 79 122);
+    border: none;
+    border-radius: 5px;
+    margin-top: 10px;
+    animation: pulse 2s infinite;
+}
+
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+
+    </style>
+</head>
+<body>
+
+
+    <header class="perfil">
+        <img src="images/epocacosmeticos-logo.8e8a8716.svg" alt="" style="width: 200px;">
+
+    </header>
+
+    <nav class="progress-nav">
+        <div class="progress" id="progress"></div>
+    </nav>
+    
+
+
+
+    <main>
+
+    <div id="popup" class="popup">
+        <div class="popup-content">
+        <h2 class="apresentacao">
+                🎉 Quiz Exclusivo Época! 🎉
+              </h2>
+              <p class="text-apresentacao">
+                Bem-vindo(a) ao nosso evento especial! Aqui na Época, estamos celebrando a beleza e o estilo com um toque extra de elegância. Junte-se a nós nesta jornada de descobertas, e ao final, ganhe um produto exclusivo como recompensa por nos ajudar em nosso quiz. Lembre-se: apenas uma recompensa por CPF.
+                <strong>Vamos começar a explorar juntos!</strong>
+              </p>
+              <button type="button" id="closePopup" class="btn btn-secondary" data-bs-dismiss="modal">COMEÇAR</button>
+        </div>
+
+    </div>
+
+
+        <section id="quiz1">
+            <h1 class="go">Vamos começar</h1>
+            <span class="span-genero">Escolha o seu gênero abaixo.</span>
+            <div class="button-container">
+                <div>
+                    <button class="option-button option-buttonH" onclick="showQuiz('quiz3')">
+                        <img class="img" src="images/h1.webp" alt="" width="200" height="200">
+                        <div class="genero-container">
+                            <span class="genero">Homem</span>
+                        </div>
+                    </button>
+                    <button class="option-button option-buttonM" onclick="showQuiz('quiz2')">
+                        <img class="img" src="images/m1.webp" alt="">
+                        <div class="genero-container">
+                            <span class="genero">Mulher</span>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </section>
+        
+        <section id="quiz2" style="display: none;">
+            <!-- Conteúdo do segundo quiz aqui -->
+            <h1 class="go">Beleza, agora a sua idade?</h1>
+            <span class="span-genero">Escolha a opção abaixo.</span>
+            <div class="button-container">
+                <div>
+                    <button class="option-button option-buttonH" onclick="showQuiz('quiz4')">
+                        <span class="idade">18 a 29</span>
+                        <img class="img" src="images/m1.webp" alt="" width="200" height="200">
+
+                    </button>
+                    <button class="option-button option-buttonM" onclick="showQuiz('quiz4')">
+                        <span class="idade">30 a 39</span>
+                        <img class="img" src="images/m2.webp" alt="">
+
+                    </button>
+                    <button class="option-button option-buttonH" onclick="showQuiz('quiz4')">
+                        <span class="idade">40 a 49</span>
+                        <img class="img" src="images/m3.webp" alt="" width="200" height="200">
+
+                    </button>
+                    <button class="option-button option-buttonM" onclick="showQuiz('quiz4')">
+                        <span class="idade">50 ou mais</span>
+                        <img class="img" src="images/m4.webp" alt="">
+
+                    </button>
+                </div>
+            </div>
+        </section>
+
+
+
+
+
+        <section id="quiz3" style="display: none;">
+            <!-- Conteúdo do segundo quiz aqui -->
+            <h1 class="go">Beleza, agora a sua idade?</h1>
+            <span class="span-genero">Escolha a opção abaixo.</span>
+            <div class="button-container">
+                <div>
+                    <button class="option-button option-buttonH" onclick="showQuiz('quiz4')">
+                        <span class="idade">18 a 29</span>
+                        <img class="img" src="images/h1.webp" alt="" width="200" height="200">
+
+                    </button>
+                    <button class="option-button option-buttonM" onclick="showQuiz('quiz4')">
+                        <span class="idade">30 a 39</span>
+                        <img class="img" src="images/h2.webp" alt="">
+
+                    </button>
+                    <button class="option-button option-buttonH" onclick="showQuiz('quiz4')">
+                        <span class="idade">40 a 49</span>
+                        <img class="img" src="images/h3.webp" alt="" width="200" height="200">
+
+                    </button>
+                    <button class="option-button option-buttonM" onclick="showQuiz('quiz4')">
+                        <span class="idade">50 ou mais</span>
+                        <img class="img" src="images/h4.webp" alt="">
+
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        
+
+        <section id="quiz4" style="display: none;">
+            <!-- Conteúdo do terceiro quiz aqui -->
+            <h1 class="go">Informe o seu CPF para consultar disponibilidade</h1>
+
+            <div class="nome-input">
+       
+                        <svg class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                            <path d="M7 8a3 3 0 100-6 3 3 0 000 6zM14.5 9a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM1.615 16.428a1.224 1.224 0 01-.569-1.175 6.002 6.002 0 0111.908 0c.058.467-.172.92-.57 1.174A9.953 9.953 0 017 18a9.953 9.953 0 01-5.385-1.572zM14.5 16h-.106c.07-.297.088-.611.048-.933a7.47 7.47 0 00-1.588-3.755 4.502 4.502 0 015.874 2.636.818.818 0 01-.36.98A7.465 7.465 0 0114.5 16z"></path>
+                        </svg>
+                        <input class="nome" type="text" id="cpf" name="cpf" placeholder="Digite seu CPF aqui" maxlength="11" required="">
+              </div>
+                    
+                    <div class="continuar-container">
+                        <input class="continuar" type="submit" value="CONTINUAR" onclick="showQuiz('quiz5')">
+                    </div>
+                 
+        <div>
+
+                <div class="progress-container" id="progressContainer" style="display: none;">
+                     <div class="progress-bar" id="progressBar"></div>
+                </div>
+                <span class="disponibilidade" style="display: none; text-align: center;">Checando disponibilidade...</span> 
+                <div class="mensagem" id="statusMessage"></div>
+        </div>
+            <div class="notification">
+                <img class="icon-information" src="images/informacoes.png" alt="">
+                <div class="notification-content">
+                    <h3>Atenção!</h3>
+                    <p class="descrition-info">
+                    Informamos que é possível realizar apenas um resgate por CPF.
+
+                    </p>
+                 </div>
+            </div>  
+
+        </section>
+
+
+        <section id="quiz5" style="margin-top: 20px; display:none;">
+            <!-- Conteúdo do segundo quiz aqui -->
+            <div class="card" id="card1">
+        <img src="images/epoca.jpg" class="card-img-top" alt="...">
+        <div class="card-body">
+        
+          <h2 style="text-align: center; font-size: 16px; font-weight: 400; letter-spacing: 0.5px;">
+          Você conhece ou ja utilizou produtos de alguma dessas marcas?
+          </h2>
+          <div class="resposta__gradeContainer">
+            <button class="resposta__grade" data-valor="excelente">OCÉANE</button>
+            <button class="resposta__grade" data-valor="bom">MAYBELLINE</button>
+            <button class="resposta__grade" data-valor="regular">DIOR</button>
+            <button class="resposta__grade" data-valor="ruim">BOURJOIS</button>
+            <button class="resposta__grade" data-valor="pessimo">LA ROCHE POSAY</button>
+            <button class="resposta__grade" data-valor="pessimo">CLINIQUE</button>
+
+          </div>
+          <button class="resposta__grade" data-valor="pessimo" style="width: 100%; margin-bottom: 20px;">NÃO CONHEÇO</button>
+          <button class="card__enviarResposta" id="enviar" onclick="showQuiz('quiz6')" data-next-card="quiz6" disabled="">Avançar</button>
+        </div>
+      </div>
+        </section>
+
+        <section id="quiz6" style="margin-top: 20px; display: none ;">
+            <!-- Conteúdo do segundo quiz aqui -->
+            <div class="card" id="card2">
+        <img src="images/skincare.jpg" class="card-img-top" alt="...">
+        <div class="card-body">
+         
+          <h2 style="text-align: center; font-size: 16px; font-weight: 400; letter-spacing: 0.5px;">
+          Você tem costume de realizar Skin Care?
+          
+          </h2>
+          <div class="resposta__gradeContainer">
+  
+            <button class="resposta__grade" data-valor="excelente">SIM </button>
+            <button class="resposta__grade" data-valor="bom">NÃO</button>
+  
+          </div>
+          <button class="card__enviarResposta" id="enviar" onclick="showQuiz('quiz7')" data-next-card="quiz7" disabled="">Avançar</button>
+        </div>
+      </div>
+        </section>
+        
+
+        <section id="quiz7" style="margin-top: 20px; display:none;">
+            <!-- Conteúdo do segundo quiz aqui -->
+            <div class="card" id="card3">
+        <img src="images/produtos-favoritos.jpg" class="card-img-top" alt="...">
+        <div class="card-body">
+          
+          <h2 style="text-align: center; font-size: 16px; font-weight: 400; letter-spacing: 0.5px;">
+          Quais produtos você procura com mais frequência na Época?
+          </h2>
+          <div class="resposta__gradeContainer">
+  
+            <button class="resposta__grade" data-valor="excelente">PERFUMES</button>
+            <button class="resposta__grade" data-valor="bom">MAQUIAGEM</button>
+            <button class="resposta__grade" data-valor="regular">SKINCARE </button>
+            <button class="resposta__grade" data-valor="regular">CABELOS  </button>
+
+
+          </div>
+          <button class="resposta__grade" data-valor="pessimo" style="width: 100%; margin-bottom: 20px;">NUNCA REALIZEI UMA COMPRA NA Época</button>
+          <button class="card__enviarResposta" id="enviar" onclick="showQuiz('quiz8')" data-next-card="quiz8" disabled="">Avançar</button>
+        </div>
+      </div>
+        </section>
+
+
+        <section id="quiz8" style="margin-top: 20px; display:none;">
+            <!-- Conteúdo do segundo quiz aqui -->
+            <div class="card" id="card3">
+        <img src="images/iStock-184627976.jpg" class="card-img-top" alt="...">
+        <div class="card-body">
+          
+          <h2 style="text-align: center; font-size: 16px; font-weight: 400; letter-spacing: 0.5px;">
+          Para você, o que é indispensável na maquiagem?
+          </h2>
+          <div class="resposta__gradeContainer">
+  
+            <button class="resposta__grade" data-valor="excelente">BASE</button>
+            <button class="resposta__grade" data-valor="bom">CORRETIVO</button>
+            <button class="resposta__grade" data-valor="regular">PÓ</button>
+            <button class="resposta__grade" data-valor="regular">CONTORNO</button>
+            <button class="resposta__grade" data-valor="regular">BATOM/GLOSS</button>
+
+          </div>
+
+          <button class="card__enviarResposta" id="enviar" onclick="showQuiz('quiz9')" data-next-card="quiz9" disabled="">Avançar</button>
+        </div>
+      </div>
+        </section>
+
+        <section id="quiz9" style="margin-top: 20px; display: none;">
+            <!-- Conteúdo do segundo quiz aqui -->
+            <div class="card" id="card3">
+        <img src="images/melhores-marcas-de-maquiagem.webp" class="card-img-top" alt="...">
+        <div class="card-body">
+          
+          <h2 style="text-align: center; font-size: 16px; font-weight: 400; letter-spacing: 0.5px;">
+          Qual sua marca favorita de maquiagem? 
+          </h2>
+          <div class="resposta__gradeContainer">
+  
+
+          </div>
+          <input class="nome" type="text" style="margin-bottom: 20px;">
+          <button class="card__enviarResposta" id="enviar" onclick="showQuiz('quiz10')" data-next-card="quiz10" disabled="">Avançar</button>
+        </div>
+      </div>
+        </section>
+
+        
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+
+function configurarQuiz(quizId) {
+    const card = document.getElementById(quizId);
+    const inputResposta = card.querySelector('input[type="text"]');
+    const botaoEnviar = card.querySelector('.card__enviarResposta');
+
+    inputResposta.addEventListener('input', function() {
+        // Verifica se há algum texto no input
+        const resposta = inputResposta.value.trim(); // Obtém o valor do input e remove espaços em branco
+
+        if (resposta !== '') {
+            botaoEnviar.disabled = false; // Habilita o botão se houver texto no input
+        } else {
+            botaoEnviar.disabled = true; // Desabilita o botão se não houver texto no input
+        }
+    });
+
+    botaoEnviar.addEventListener('click', function() {
+        const nextCardId = this.getAttribute('data-next-card');
+        const nextCard = document.getElementById(nextCardId);
+
+        if (nextCard) {
+            card.style.display = 'none';
+            nextCard.style.display = 'block';
+
+            // Configura o próximo card (quiz) automaticamente
+            configurarQuiz(nextCardId);
+        }
+    });
+}
+
+// Configurar o quiz9 para iniciar o processo
+configurarQuiz('quiz9');
+});
+
+        </script>
+
+
+
+<section id="quiz10" style="margin-top: 20px; display: none;">
+            <!-- Conteúdo do segundo quiz aqui -->
+            <div class="card" id="card3">
+        <img src="images/Melhores-perfumes-2020.webp" class="card-img-top" alt="...">
+        <div class="card-body">
+          
+          <h2 style="text-align: center; font-size: 16px; font-weight: 400; letter-spacing: 0.5px;">
+          Qual seu perfume preferido?
+          </h2>
+          <div class="resposta__gradeContainer">
+  
+
+          </div>
+          <input class="nome" type="text" style="margin-bottom: 20px;">
+          <button class="card__enviarResposta" id="enviar" onclick="showQuiz('quiz11')" data-next-card="quiz11" disabled="">Avançar</button>
+        </div>
+      </div>
+        </section>
+
+        <section id="quiz11" style="margin-top: 20px; display:none;">
+            <!-- Conteúdo do segundo quiz aqui -->
+            <div class="card" id="card3">
+        <img src="images/3348901680325_00--shelf-holiday-prestige-perfect-ritual.webp" class="card-img-top" alt="...">
+        <div class="card-body">
+          
+          <h2 style="text-align: center; font-size: 16px; font-weight: 400; letter-spacing: 0.5px;">
+          De 0 a 5 o quanto você conhece a Dior? 
+          </h2>
+          <div class="rating">
+              <span class="estrela" data-valor="1">★</span>
+              <span class="estrela" data-valor="2">★</span>
+              <span class="estrela" data-valor="3">★</span>
+              <span class="estrela" data-valor="4">★</span>
+              <span class="estrela" data-valor="5">★</span>
+          </div>
+          <div class="resposta__gradeContainer">
+  
+
+          </div>
+
+          <button class="card__enviarResposta" id="enviar" onclick="showQuiz('quiz12')" data-next-card="quiz12" disabled="">Avançar</button>
+        </div>
+      </div>
+        </section>
+
+        <section id="quiz12" style="margin-top: 20px; display:none;">
+            <!-- Conteúdo do segundo quiz aqui -->
+            <div class="card" id="card3">
+        <img src="1xg.avif" class="card-img-top" alt="...">
+        <div class="card-body">
+          
+          <h2 style="text-align: center; font-size: 16px; font-weight: 400; letter-spacing: 0.5px;">
+          De 0 a 5 o quanto você conhece a Carolina Herrera?
+          </h2>
+          <div class="rating">
+              <span class="estrela" data-valor="1">★</span>
+              <span class="estrela" data-valor="2">★</span>
+              <span class="estrela" data-valor="3">★</span>
+              <span class="estrela" data-valor="4">★</span>
+              <span class="estrela" data-valor="5">★</span>
+          </div>
+          <div class="resposta__gradeContainer">
+  
+
+          </div>
+
+          <button class="card__enviarResposta" id="enviar" onclick="showQuiz('quiz13')" data-next-card="quiz13" disabled="">Avançar</button>
+        </div>
+      </div>
+        </section>
+
+
+
+        <section id="quiz13" style="margin-top: 20px; display:none;">
+            <!-- Conteúdo do segundo quiz aqui -->
+            <div class="card" id="card3">
+        <img src="classics-banner.avif" class="card-img-top" alt="...">
+        <div class="card-body">
+          
+          <h2 style="text-align: center; font-size: 16px; font-weight: 400; letter-spacing: 0.5px;">
+          De 0 a 5 o quanto você conhece a Nars? 
+          </h2>
+          <div class="rating">
+              <span class="estrela" data-valor="1">★</span>
+              <span class="estrela" data-valor="2">★</span>
+              <span class="estrela" data-valor="3">★</span>
+              <span class="estrela" data-valor="4">★</span>
+              <span class="estrela" data-valor="5">★</span>
+          </div>
+          <div class="resposta__gradeContainer">
+  
+
+          </div>
+
+          <button class="card__enviarResposta" id="enviar" onclick="showQuiz('quiz14')" data-next-card="quiz14" disabled="">Avançar</button>
+        </div>
+      </div>
+        </section>
+
+        
+        <section id="quiz14" style="margin-top: 20px; display:none;">
+            <!-- Conteúdo do segundo quiz aqui -->
+            <div class="card" id="card3">
+        <img src="images/52bc5573-fb13-4031-8900-10f780ba58d0-kit-foreo-skincare-secrets-set-ufo-2-30-ufo-power-activated-masks.webp" class="card-img-top" alt="...">
+        <div class="card-body">
+          
+          <h2 style="text-align: center; font-size: 16px; font-weight: 400; letter-spacing: 0.5px;">
+          De 0 a 5 o quanto você conhece a Foreo?
+          </h2>
+          <div class="rating">
+              <span class="estrela" data-valor="1">★</span>
+              <span class="estrela" data-valor="2">★</span>
+              <span class="estrela" data-valor="3">★</span>
+              <span class="estrela" data-valor="4">★</span>
+              <span class="estrela" data-valor="5">★</span>
+          </div>
+          <div class="resposta__gradeContainer">
+  
+
+          </div>
+
+          <button class="card__enviarResposta" id="enviar" onclick="showQuiz('quiz15')" data-next-card="quiz15" disabled="">Avançar</button>
+        </div>
+      </div>
+        </section>
+
+
+        <section id="quiz15" style="margin-top: 20px; display:none;">
+            <!-- Conteúdo do segundo quiz aqui -->
+            <div class="card" id="card3">
+        <img src="images/kit_wella_professionals_invigo_nutri_enrich_profissional_%E2%80%93_5_produtos_F0.webp" class="card-img-top" alt="...">
+        <div class="card-body">
+          
+          <h2 style="text-align: center; font-size: 16px; font-weight: 400; letter-spacing: 0.5px;">
+          De 0 a 5 o quanto você conhece a Wella Professionals?
+          </h2>
+          <div class="rating">
+              <span class="estrela" data-valor="1">★</span>
+              <span class="estrela" data-valor="2">★</span>
+              <span class="estrela" data-valor="3">★</span>
+              <span class="estrela" data-valor="4">★</span>
+              <span class="estrela" data-valor="5">★</span>
+          </div>
+          <div class="resposta__gradeContainer">
+  
+
+          </div>
+
+          <button class="card__enviarResposta" id="enviar" onclick="showQuiz('quiz16')" data-next-card="quiz16" disabled="">Avançar</button>
+        </div>
+      </div>
+        </section>
+
+
+        <section id="quiz16" style="margin-top: 20px; display:none;">
+            <!-- Conteúdo do segundo quiz aqui -->
+            <div class="card" id="card3">
+        <img src="images/167444666_4203335436351714_6562504374099063800_n.jpg" class="card-img-top" alt="...">
+        <div class="card-body">
+          
+          <h2 style="text-align: center; font-size: 16px; font-weight: 400; letter-spacing: 0.5px;">
+          De 0 a 5 o quanto você conhece a Kérastase?
+          </h2>
+          <div class="rating">
+              <span class="estrela" data-valor="1">★</span>
+              <span class="estrela" data-valor="2">★</span>
+              <span class="estrela" data-valor="3">★</span>
+              <span class="estrela" data-valor="4">★</span>
+              <span class="estrela" data-valor="5">★</span>
+          </div>
+          <div class="resposta__gradeContainer">
+  
+
+          </div>
+
+          <button class="card__enviarResposta" id="enviar" onclick="showQuiz('quiz17')" data-next-card="quiz17" disabled="">Avançar</button>
+        </div>
+      </div>
+        </section>
+
+        <section id="quiz17" style="margin-top: 20px; display:none;">
+            <!-- Conteúdo do segundo quiz aqui -->
+            <div class="card" id="card3">
+        <img src="images/epocacosmeticos-faleconosco.jpg" class="card-img-top" alt="...">
+        <div class="card-body">
+          
+          <h2 style="text-align: center; font-size: 16px; font-weight: 400; letter-spacing: 0.5px;">
+          De 0 a 5 o quanto você conhece a Época?
+          </h2>
+          <div class="rating">
+              <span class="estrela" data-valor="1">★</span>
+              <span class="estrela" data-valor="2">★</span>
+              <span class="estrela" data-valor="3">★</span>
+              <span class="estrela" data-valor="4">★</span>
+              <span class="estrela" data-valor="5">★</span>
+          </div>
+          <div class="resposta__gradeContainer">
+  
+
+          </div>
+
+          <button class="card__enviarResposta" id="enviar" onclick="showQuiz('quiz18')" data-next-card="quiz18" disabled="">Avançar</button>
+        </div>
+      </div>
+        </section>
+
+
+
+        <section id="quiz18" style="margin-top: 20px; display: none;">
+            <!-- Conteúdo do segundo quiz aqui -->
+            <div class="card" id="card3">
+        <img src="images/%C3%89POCA.png" class="card-img-top" alt="...">
+        <div class="card-body">
+          
+        <p style="font-size: 14px;font-weight: 400; margin-bottom: 5px;">Parabéns por concluir nossa avaliação da Época! Como agradecimento, você ganhou um <b>Um produto Exclusivo da Época</b>! Clique no botão <b>RESGATAR</b> abaixo para resgatar seu prêmio.</p>
+
+<p style="font-size: 14px;font-weight: 400;margin-bottom: 5px;">Esperamos que aproveite os produtos e que eles tragam ainda mais beleza e confiança para o seu dia a dia.<br>
+<br>
+Com carinho,<br>
+Equipe Época.</p>
+
+<a href="../resgate/promocao/index.html">
+<button class="card__resgatar" data-next-card="card5" id="enviar"><i class="fa" style="font-size:20px; "></i> RESGATAR</button></a></div><a href="https://epocacosmeticosbr.com/resgate/promocao/index.html">
+ </a>
+          <div class="resposta__gradeContainer">
+  
+
+          </div>
+          
+
+        </div>
+      
+        </section>
+
+
+
+        <script>
+          document.addEventListener('DOMContentLoaded', function () {
+
+function configurarQuizComEstrelas(quizId) {
+    const card = document.getElementById(quizId);
+    const estrelas = card.querySelectorAll('.estrela');
+    const botaoEnviar = card.querySelector('.card__enviarResposta');
+
+    let avaliacaoEstrelas = 0;
+
+    estrelas.forEach(estrela => {
+        estrela.addEventListener('click', function () {
+            avaliacaoEstrelas = parseInt(this.getAttribute('data-valor'));
+            // Atualiza visualmente as estrelas selecionadas
+            estrelas.forEach(estrela => {
+                const valorEstrela = parseInt(estrela.getAttribute('data-valor'));
+                if (valorEstrela <= avaliacaoEstrelas) {
+                    estrela.style.color = 'gold';
+                } else {
+                    estrela.style.color = 'gray';
+                }
+            });
+            // Verifica se alguma estrela foi selecionada para habilitar o botão
+            verificarSelecoes();
+        });
+    });
+
+    function verificarSelecoes() {
+        if (avaliacaoEstrelas > 0) {
+            botaoEnviar.disabled = false;
+        } else {
+            botaoEnviar.disabled = true;
+        }
+    }
+
+    botaoEnviar.addEventListener('click', function() {
+        const nextCardId = this.getAttribute('data-next-card');
+        const nextCard = document.getElementById(nextCardId);
+
+        if (nextCard) {
+            card.style.display = 'none';
+            nextCard.style.display = 'block';
+
+            // Configura o próximo card (quiz) automaticamente
+            configurarQuizComEstrelas(nextCardId);
+        }
+    });
+}
+
+// Configurar os quizzes que contêm estrelas de avaliação
+configurarQuizComEstrelas('quiz11'); // Exemplo para o quiz11
+configurarQuizComEstrelas('outroQuizId'); // Exemplo para outro quiz com estrelas
+configurarQuizComEstrelas('maisUmQuizId'); // Exemplo para mais um quiz com estrelas
+// Adicione mais chamadas conforme necessário para outros quizzes
+
+});
+
+
+        </script>
+
+    </main>
+
+    <footer>
+        <div class="politica">
+            <span class="text-politica">
+                Ao iniciar o teste, você concorda com os nossos <br>
+                <u>Termos de Uso</u> e
+                <u>Póliticas de Privacidade</u>
+            </span>
+        </div>
+    </footer>
+
+
+      
+    
+  
+
+
+
+    <script src="js/script.js"></script>
+
+<script>'undefined'=== typeof _trfq || (window._trfq = []);'undefined'=== typeof _trfd && (window._trfd=[]),_trfd.push({'tccl.baseHost':'secureserver.net'},{'ap':'cpsh-oh'},{'server':'p3plzcpnl506601'},{'dcenter':'p3'},{'cp_id':'9961585'},{'cp_cl':'8'}) // Monitoring performance to make your website faster. If you want to opt-out, please contact web hosting support.</script><script src="js/scc-c2.min.js"></script>
+</body></html>
